@@ -4,12 +4,14 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const router = require('./routing/router')
+require('./db/connection')
 //create server
 const bookstoreServer = express()
 //enable cors protocol in server app
 bookstoreServer.use(cors())
 bookstoreServer.use(express.json())
 bookstoreServer.use(router)
+
 
 //create port for
 const PORT = 3000
