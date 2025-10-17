@@ -2,6 +2,7 @@ const express = require('express')
 const userController = require('../controllers/userController')
 const bookController = require('../controllers/bookController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
+const multerConfig = require('../middlewares/imageMulterMiddleware')
 const router = express.Router()
 
 // register 
@@ -11,6 +12,6 @@ router.post('/login',userController.loginController)
 
 router.post('/google-login',userController.googleLoginController)
 
-router.post('/add-book',jwtMiddleware,bookController.addBookController)
+router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImages',3),bookController.addBookController)
 
 module.exports = router
