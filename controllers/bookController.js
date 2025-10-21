@@ -22,7 +22,7 @@ exports.addBookController = async (req,res)=>{
         }
 
     }catch(err){
-        res.status(200).json(newBook)
+        res.status(500).json(err)
     }
     
 }
@@ -38,4 +38,30 @@ exports.getHomeBooks = async(req,res) =>{
         res.status(500).json(err)
     }
     
+}
+
+exports.getAllBooks = async(req,res) =>{
+    console.log("Inside getAllBooks");
+    const email = req.payload
+    try{
+
+        const allBooks = await books.find({userMail:{$ne:email}})
+        res.status(200).json(allBooks)
+
+    }catch(err){
+        res.status(500).json(err)
+    }
+    
+}
+
+exports.viewBookController = async (req, res) => {
+    console.log("Inside ViewBookController");
+    const {id} = req.params
+    console.log(id);
+    try{
+        const viewBook = await books.findById({_id:id})
+        res.status(200).json(viewBook)
+    }catch(err){
+        res.status(500).json(err)
+    }
 }

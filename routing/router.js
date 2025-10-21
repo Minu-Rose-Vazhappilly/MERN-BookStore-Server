@@ -16,4 +16,8 @@ router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImages',3),bookC
 
 router.get('/home-books',bookController.getHomeBooks)
 
+router.get('/all-books',jwtMiddleware,bookController.getAllBooks)
+
+router.get('/books/:id/view',jwtMiddleware,bookController.viewBookController)
+
 module.exports = router
