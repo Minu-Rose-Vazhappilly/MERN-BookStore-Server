@@ -42,10 +42,15 @@ exports.getHomeBooks = async(req,res) =>{
 
 exports.getAllBooks = async(req,res) =>{
     console.log("Inside getAllBooks");
+    const searchKey = req.query.search
     const email = req.payload
+    const query = {
+        title:{$regex : searchKey,$options:'i'},
+        userMail:{$ne:email}
+    }
     try{
 
-        const allBooks = await books.find({userMail:{$ne:email}})
+        const allBooks = await books.find(query)
         res.status(200).json(allBooks)
 
     }catch(err){
