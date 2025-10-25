@@ -59,6 +59,8 @@ exports.getAllBooks = async(req,res) =>{
     
 }
 
+
+
 exports.viewBookController = async (req, res) => {
     console.log("Inside ViewBookController");
     const {id} = req.params
@@ -69,4 +71,50 @@ exports.viewBookController = async (req, res) => {
     }catch(err){
         res.status(500).json(err)
     }
+}
+
+exports.getAllUserBooksController = async(req,res) =>{
+    console.log("Inside getAllUserBooksController");
+    const email = req.payload
+    
+    try{
+
+        const allUserBooks = await books.find({userMail:email})
+        res.status(200).json(allUserBooks)
+
+    }catch(err){
+        res.status(500).json(err)
+    }
+    
+}
+
+exports.getAllUserBoughtBooksController = async(req,res) =>{
+    console.log("Inside getAllUserBoughtBooksController");
+    const email = req.payload
+    
+    try{
+
+        const allUserBoughtBooks = await books.find({bought:email})
+        res.status(200).json(allUserBoughtBooks)
+
+    }catch(err){
+        res.status(500).json(err)
+    }
+    
+}
+
+exports.deleteUserBookController = async (req,res) =>{
+    console.log("Inside deleteUserBookController");
+
+    const {id} = req.params
+    console.log(id);
+    try{
+        await books.findByIdAndDelete({_id:id})
+        res.status(200).json("Deleted Successfully!!!")
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+    
+    
 }
