@@ -34,7 +34,7 @@ exports.loginController = async (req,res)=>{
         const existingUser = await users.findOne({email})
         if(existingUser){
             if(existingUser.password == password){
-            const token = jwt.sign({userMail:existingUser.email},process.env.JWTSECRET)
+            const token = jwt.sign({userMail:existingUser.email,role:existingUser.role},process.env.JWTSECRET)
             res.status(200).json({user:existingUser,token})
             
         }else{
@@ -61,7 +61,7 @@ exports.googleLoginController = async (req,res)=>{
     try{
         const existingUser = await users.findOne({email})
         if(existingUser){
-              const token = jwt.sign({userMail:existingUser.email},process.env.JWTSECRET)
+              const token = jwt.sign({userMail:existingUser.email,role:existingUser.role},process.env.JWTSECRET)
             res.status(200).json({user:existingUser,token})
 
         }else{
@@ -99,3 +99,21 @@ exports.userProfileEditController =  async(req,res)=>{
     }
 
 }
+
+// Admin Part
+
+exports.getAllUsersController = async(req,res)=>{
+    console.log("Inside getAllUsersController");
+    const email = req.payload
+    try{
+        const allUsers = await users.find({email:{$ne:email}})
+        res.status(200).json(allUsers)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+
+    
+}
+
+

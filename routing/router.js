@@ -3,6 +3,7 @@ const userController = require('../controllers/userController')
 const bookController = require('../controllers/bookController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerConfig = require('../middlewares/imageMulterMiddleware')
+const adminJwtMiddleware = require('../middlewares/adminJwtMiddleware')
 const router = express.Router()
 
 // register 
@@ -15,7 +16,7 @@ router.post('/google-login',userController.googleLoginController)
 router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImages',3),bookController.addBookController)
 
 router.get('/home-books',bookController.getHomeBooks)
-//Authorized User
+//--------------------------------Authorized User---------------
 
 router.get('/all-books',jwtMiddleware,bookController.getAllBooks)
 
@@ -32,5 +33,11 @@ router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserBo
 
 //user profile update 
 router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),userController.userProfileEditController)
+
+//-----------------Admin-----------------------
+router.get('/all-user',adminJwtMiddleware,userController.getAllUsersController)
+
+router.get('/admin-all-books',adminJwtMiddleware,bookController.getAllBooksAdminController)
+
 
 module.exports = router
