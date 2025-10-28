@@ -116,4 +116,19 @@ exports.getAllUsersController = async(req,res)=>{
     
 }
 
+exports.adminProfileEditController = async(req,res)=>{
+    console.log("Inside adminProfileEditController");
+    const {username,password,role,profile} = req.body
+    const email = req.payload
+    const uploadAdminProfile = req.file?req.file.filename:profile
+    try{
+        const updateAdmin = await users.findOneAndUpdate({email},{username,email,password,profile:uploadAdminProfile,role},{new:true})
+        await updateAdmin.save()
+        res.status(200).json(updateAdmin)
+    }catch(err){
+        res.status(500).json(err)
+    }
+    
+}
+
 
