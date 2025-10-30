@@ -4,6 +4,7 @@ const bookController = require('../controllers/bookController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerConfig = require('../middlewares/imageMulterMiddleware')
 const adminJwtMiddleware = require('../middlewares/adminJwtMiddleware')
+const jobController = require('../controllers/jobController')
 const router = express.Router()
 
 // register 
@@ -34,6 +35,8 @@ router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserBo
 //user profile update 
 router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),userController.userProfileEditController)
 
+router.get('/get-allJobs',jobController.getAllJobController)
+
 //-----------------Admin-----------------------
 router.get('/all-user',adminJwtMiddleware,userController.getAllUsersController)
 
@@ -42,5 +45,9 @@ router.get('/admin-all-books',adminJwtMiddleware,bookController.getAllBooksAdmin
 router.put('/admin/book/approve',adminJwtMiddleware,bookController.updateBookStatusController)
 //Edit Admin
 router.put('/admin-profile/edit',adminJwtMiddleware,multerConfig.single('profile'),userController.adminProfileEditController)
+//Add Job
+router.post('/admin/addJob',adminJwtMiddleware,jobController.addJobController)
+//Delete Job
+router.delete('/job/:id/remove',adminJwtMiddleware,jobController.removeJobController)
 
 module.exports = router
