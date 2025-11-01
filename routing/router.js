@@ -5,6 +5,8 @@ const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerConfig = require('../middlewares/imageMulterMiddleware')
 const adminJwtMiddleware = require('../middlewares/adminJwtMiddleware')
 const jobController = require('../controllers/jobController')
+const pdfMulterConfig = require('../middlewares/pdfMulterMiddleware')
+const applicationController = require('../controllers/applicationController')
 const router = express.Router()
 
 // register 
@@ -17,6 +19,8 @@ router.post('/google-login',userController.googleLoginController)
 router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImages',3),bookController.addBookController)
 
 router.get('/home-books',bookController.getHomeBooks)
+//add application
+router.post('/application/add',jwtMiddleware,pdfMulterConfig.single('resume'),applicationController.addApplicationController)
 //--------------------------------Authorized User---------------
 
 router.get('/all-books',jwtMiddleware,bookController.getAllBooks)
@@ -49,5 +53,7 @@ router.put('/admin-profile/edit',adminJwtMiddleware,multerConfig.single('profile
 router.post('/admin/addJob',adminJwtMiddleware,jobController.addJobController)
 //Delete Job
 router.delete('/job/:id/remove',adminJwtMiddleware,jobController.removeJobController)
+//view application
+router.get('/all-application',adminJwtMiddleware,applicationController.getApplicationController)
 
 module.exports = router
