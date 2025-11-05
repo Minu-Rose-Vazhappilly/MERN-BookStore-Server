@@ -41,6 +41,8 @@ router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),use
 
 router.get('/get-allJobs',jobController.getAllJobController)
 
+router.post('/make-payment',jwtMiddleware,bookController.makeBookPaymentController)
+
 //-----------------Admin-----------------------
 router.get('/all-user',adminJwtMiddleware,userController.getAllUsersController)
 

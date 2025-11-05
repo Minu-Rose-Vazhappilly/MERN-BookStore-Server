@@ -1,4 +1,5 @@
 const books = require('../models/bookModel')
+const stripe = require('stripe')('sk_test_51SPbdoDHLUbAabhFX2bsI5tgjBDmJc0WbqkZ4k9zMimaJoLk78T4p3vMkB4ufXmjJNE5JKwIcRbifFswAMzdLI5A00OAnyNaxv')
 
 exports.addBookController = async (req,res)=>{
     console.log("Inside addBookController");
@@ -142,6 +143,54 @@ exports.updateBookStatusController = async(req,res)=>{
     catch(err){
         res.status(500).json(err)
     }
+    
+}
+
+exports.makeBookPaymentController = async (req,res)=>{
+    console.log("Inside makeBookPaymentController");
+    const {_id,title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,userMail} = req.body
+
+    const email = req.payload
+
+    try{
+
+        const updateBookDetails = await books.findByIdAndUpdate({_id},{title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,status:"sold",userMail,bought:email},{new:true})
+        console.log(updateBookDetails);
+        //stripe checkout session.
+        const line_items = [{
+            price_data:{
+                currency:'usd',
+                product_data:{
+                    name:title,
+                    description:`${author} | ${publisher}`,
+                    images:uploadImg,
+                    metadata:{
+                        title,author,noOfPages,imageUrl,price,discountPrice,abstract,publisher,language,isbn,category,status:"sold",userMail,bought:email
+                    }
+                },
+                unit_amount:Math.round(discountPrice*100)
+                
+            },
+            quantity:1
+        }]
+
+        const session = await stripe.checkout.sessions.create({
+    payment_method_types:["card"],
+    line_items,
+    mode: 'payment',
+    success_url: 'http://localhost:5173/payment-success',
+    cancel_url:"http://localhost:5173/payment-error"
+
+}); 
+console.log(session);
+res.status(200).json({checkoutSessionURL:session.url})
+
+        
+
+    }catch(err){
+        res.status(500).json(err)
+    }
+
     
 }
 
